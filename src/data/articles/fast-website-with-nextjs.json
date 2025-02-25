@@ -1,0 +1,11 @@
+{
+  "id": "1",
+  "title": "Next.jsを使った高速なウェブサイト構築",
+  "slug": "fast-website-with-nextjs",
+  "date": "2025-02-20",
+  "author": "山田 太郎",
+  "category": "技術",
+  "tags": ["Next.js", "React", "パフォーマンス"],
+  "excerpt": "Next.jsを活用して爆速で動作するウェブサイトを構築する方法について解説します。",
+  "content": "# Next.jsを使った高速なウェブサイト構築\n\n## はじめに\n\nウェブサイトの表示速度はユーザー体験とSEOの両方に大きな影響を与えます。Next.jsは、Reactベースのフレームワークで、静的サイト生成（SSG）やサーバーサイドレンダリング（SSR）などの機能を提供し、高速なウェブサイトを構築するための強力なツールです。\n\n## 静的サイト生成（SSG）の利点\n\n静的サイト生成を利用すると、ビルド時にHTMLが生成されるため、ユーザーがアクセスした際に動的にコンテンツを生成する必要がありません。これにより、以下のメリットがあります：\n\n- 高速な初期ロード時間\n- CDNでのキャッシュが容易\n- サーバー負荷の軽減\n- SEOの向上\n\n## Next.jsでのSSGの実装方法\n\nNext.jsでは、`getStaticProps`と`getStaticPaths`を使用して静的サイト生成を実装できます。\n\n```jsx\n// pages/blog/[slug].js\nexport async function getStaticPaths() {\n  // 全ての可能なパスを返す\n  return {\n    paths: [\n      { params: { slug: 'hello-world' } },\n      { params: { slug: 'another-post' } }\n    ],\n    fallback: false\n  };\n}\n\nexport async function getStaticProps({ params }) {\n  // paramsを使用してデータを取得\n  const post = await getPostBySlug(params.slug);\n  return {\n    props: { post }\n  };\n}\n```\n\n## パフォーマンス最適化のためのその他のテクニック\n\n1. **画像の最適化**: Next.jsの`Image`コンポーネントを使用して、自動的に画像を最適化します。\n2. **コード分割**: 必要なJavaScriptのみをロードし、初期ロード時間を短縮します。\n3. **フォントの最適化**: Webフォントの読み込みを最適化し、CLS（Cumulative Layout Shift）を減らします。\n\n## まとめ\n\nNext.jsを活用することで、開発者は簡単に高速で効率的なウェブサイトを構築できます。静的サイト生成を中心としたアプローチは、特に頻繁に更新されないコンテンツを持つウェブサイトに最適です。"
+}

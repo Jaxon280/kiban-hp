@@ -4,18 +4,37 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #28304c;
+  --accent: #ffd700;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility classes for transparency effects */
+.glass-effect {
+  @apply bg-white bg-opacity-10 backdrop-blur-md;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+/* Font utilities */
+.heading {
+  @apply font-sf-pro font-bold tracking-tight;
+}
+
+.body-text {
+  @apply font-roboto font-light;
+}
+
+.japanese-text {
+  @apply font-sans-jp font-thin;
 }

@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,10 +9,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#28304c", // ネイビー
+        secondary: "#ffd700", // ゴールド
+      },
+      fontFamily: {
+        "sans-jp": ['"Noto Sans JP"', "sans-serif"],
+        "sf-pro": ['"SF Pro Display"', "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
   },
   plugins: [],
-} satisfies Config;
+};
+
+export default config;
