@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": "3000",
+    "HOST": "localhost",
+    "SMTP_HOST": "smtp.example.com",
+    "SMTP_PORT": "587",
+    "SMTP_USER": "your_smtp_username",
+    "SMTP_PASS": "your_smtp_password",
+    "DATABASE_URL": "your_database_connection_string"
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
