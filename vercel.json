@@ -3,7 +3,12 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "yarn install --frozen-lockfile",
+        "buildCommand": "yarn build",
+        "nodeVersion": "20"
+      }
     }
   ],
   "env": {
