@@ -9,10 +9,10 @@ import {
 // 特定の記事を取得するAPI
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const article = getArticleBySlug(params.slug);
+    const article = getArticleBySlug((await params).slug);
 
     if (!article) {
       return NextResponse.json(
@@ -23,7 +23,7 @@ export async function GET(
 
     return NextResponse.json(article);
   } catch (error) {
-    console.error(`Error fetching article ${params.slug}:`, error);
+    console.error(`Error fetching article ${(await params).slug}:`, error);
     return NextResponse.json(
       { error: "記事の取得に失敗しました" },
       { status: 500 }
@@ -34,21 +34,21 @@ export async function GET(
 // 記事を更新するAPI
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const article = (await request.json()) as Article;
-    console.log("PUT /api/articles/" + params.slug, "body:", article);
+    console.log("PUT /api/articles/" + (await params).slug, "body:", article);
 
     // スラッグの整合性チェック
-    if (params.slug !== article.slug) {
+    if ((await params).slug !== article.slug) {
       return NextResponse.json(
         { error: "URLのスラッグと記事のスラッグが一致しません" },
         { status: 400 }
       );
     }
 
-    const existingArticle = getArticleBySlug(params.slug);
+    const existingArticle = getArticleBySlug((await params).slug);
     if (!existingArticle) {
       return NextResponse.json(
         { error: "記事が見つかりません" },
@@ -60,7 +60,7 @@ export async function PUT(
 
     return NextResponse.json({ success: true, article });
   } catch (error) {
-    console.error(`Error updating article ${params.slug}:`, error);
+    console.error(`Error updating article ${(await params).slug}:`, error);
     return NextResponse.json(
       { error: "記事の更新に失敗しました" },
       { status: 500 }
@@ -71,10 +71,10 @@ export async function PUT(
 // 記事を削除するAPI
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const article = getArticleBySlug(params.slug);
+    const article = getArticleBySlug((await params).slug);
 
     if (!article) {
       return NextResponse.json(
@@ -83,11 +83,11 @@ export async function DELETE(
       );
     }
 
-    deleteArticle(params.slug);
+    deleteArticle((await params).slug);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`Error deleting article ${params.slug}:`, error);
+    console.error(`Error deleting article ${(await params).slug}:`, error);
     return NextResponse.json(
       { error: "記事の削除に失敗しました" },
       { status: 500 }
