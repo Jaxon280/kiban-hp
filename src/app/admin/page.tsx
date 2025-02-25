@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import { Article } from "@/utils/articleUtils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     // 記事データを取得
