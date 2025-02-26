@@ -1,18 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import NewArticleForm from "./NewArticleForm";
 import NewNewsForm from "./NewNewsForm";
 
 export default function AdminNewPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const contentType =
-    searchParams?.get("type") === "news" ? "news" : "articles";
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const searchParams = useSearchParams();
+  // const contentType =
+  //   searchParams?.get("type") === "news" ? "news" : "articles";
+  const contentType = "articles";
 
   const renderForm = () => {
     if (contentType === "articles") {
@@ -40,18 +37,12 @@ export default function AdminNewPage() {
             </Link>
           </div>
 
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              <p>{error}</p>
-            </div>
-          )}
-
           {/* Conditionally render error message based on searchParams */}
-          {!searchParams?.get("type") && (
+          {/* {!searchParams?.get("type") && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               <p>コンテンツタイプを選択してください</p>
             </div>
-          )}
+          )} */}
 
           {renderForm()}
         </div>

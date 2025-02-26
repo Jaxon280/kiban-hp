@@ -33,8 +33,8 @@ export default function AdminPage() {
           setNewsItems(data);
           setArticles([]); // Clear articles when news items are fetched
         }
-      } catch (err: any) {
-        setError(err.message || "データ読み込み中にエラーが発生しました。");
+      } catch (err: unknown) {
+        setError("データ読み込み中にエラーが発生しました。");
         console.error(err);
       } finally {
         setLoading(false);
@@ -64,8 +64,8 @@ export default function AdminPage() {
         if (!response.ok) throw new Error("ニュースの削除に失敗しました");
         setNewsItems(newsItems.filter((news) => news.slug !== slug)); // Update news items state
       }
-    } catch (err: any) {
-      setError(err.message || "コンテンツの削除中にエラーが発生しました。");
+    } catch (err: unknown) {
+      setError("コンテンツの削除中にエラーが発生しました。");
       console.error(err);
     }
   };

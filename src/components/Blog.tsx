@@ -1,4 +1,4 @@
-import { Article, getAllArticles } from "@/utils/articleUtils";
+import { Article } from "@/utils/articleUtils";
 import Link from "next/link";
 
 interface BlogProps {

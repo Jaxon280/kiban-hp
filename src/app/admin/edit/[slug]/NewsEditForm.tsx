@@ -47,8 +47,8 @@ export default function NewsEditForm({ newsItem, params }: NewsEditFormProps) {
 
       // 成功したら管理画面に戻る
       router.push("/admin");
-    } catch (err: any) {
-      setError(err.message || "ニュースの更新中にエラーが発生しました");
+    } catch (err: unknown) {
+      setError("ニュースの更新中にエラーが発生しました");
       console.error(err);
     } finally {
       setSaving(false);

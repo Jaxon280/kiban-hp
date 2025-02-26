@@ -8,7 +8,6 @@ import Link from "next/link";
 export default function NewNewsForm() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<Omit<News, "id" | "slug" | "date">>({
     title: "",
     category: "",
@@ -26,7 +25,6 @@ export default function NewNewsForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setError(null);
 
     try {
       const response = await fetch("/api/news/create", {
@@ -44,8 +42,8 @@ export default function NewNewsForm() {
 
       // 成功したら管理画面にリダイレクト
       router.push("/admin");
-    } catch (err: any) {
-      setError(err.message || "ニュースの作成中にエラーが発生しました");
+    } catch (err: unknown) {
+      console.error("ニュースの作成中にエラーが発生しました");
       console.error(err);
     } finally {
       setSaving(false);

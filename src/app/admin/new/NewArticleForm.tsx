@@ -8,7 +8,6 @@ import Link from "next/link";
 export default function NewArticleForm() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<
     Omit<Article, "id" | "slug" | "date" | "tags" | "author"> & {
       tags: string;
@@ -33,7 +32,6 @@ export default function NewArticleForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setError(null);
 
     try {
       // タグを配列に変換
@@ -63,8 +61,7 @@ export default function NewArticleForm() {
 
       // 成功したら管理画面にリダイレクト
       router.push("/admin");
-    } catch (err: any) {
-      setError(err.message || "記事の作成中にエラーが発生しました");
+    } catch (err: unknown) {
       console.error(err);
     } finally {
       setSaving(false);
