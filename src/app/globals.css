@@ -11,6 +11,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  font-family: "Montserrat", serif; /* デフォルトフォントをMontserrat SemiBoldに設定 */
 }
 
 /* Utility classes for transparency effects */
@@ -28,7 +29,7 @@ body {
 
 /* Font utilities */
 .heading {
-  @apply font-sf-pro font-bold tracking-tight;
+  @apply font-montserrat-semiBold font-bold tracking-tight;
 }
 
 .body-text {

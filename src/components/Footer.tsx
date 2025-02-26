@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -7,13 +8,21 @@ export default function Footer() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">企業名</h3>
+              <h3 className="text-xl font-bold mb-4">
+                <Image
+                  src="/logo_white.png"
+                  alt="logo"
+                  width={120}
+                  height={30}
+                  priority={true}
+                />
+              </h3>
               <p className="text-gray-400 mb-4">
                 最先端のテクノロジーで、ビジネスの成長と革新をサポートします。
               </p>
               <div className="flex space-x-4">
                 <a
-                  href="#"
+                  href="https://facebook.com"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   <svg
@@ -30,7 +39,7 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href="https://twitter.com"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   <svg
@@ -43,7 +52,7 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href="https://instagram.com"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   <svg
@@ -106,7 +115,7 @@ export default function Footer() {
                     サービス
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="#team"
                     className="text-gray-400 hover:text-white transition-colors"
@@ -121,7 +130,7 @@ export default function Footer() {
                   >
                     ブログ
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="#contact"
@@ -133,7 +142,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div>
+            {/* <div>
               <h3 className="text-lg font-semibold mb-4">サービス</h3>
               <ul className="space-y-2">
                 <li>
@@ -177,7 +186,7 @@ export default function Footer() {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             <div>
               <h3 className="text-lg font-semibold mb-4">お問い合わせ</h3>

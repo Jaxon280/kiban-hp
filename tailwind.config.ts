@@ -16,6 +16,7 @@ const config: Config = {
         "sans-jp": ['"Noto Sans JP"', "sans-serif"],
         "sf-pro": ['"SF Pro Display"', "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
+        "montserrat-semiBold": ["Montserrat", "serif"], // Montserrat SemiBold fontを追加
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

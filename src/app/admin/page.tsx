@@ -2,55 +2,76 @@
 
 import { useState, useEffect } from "react";
 import { Article } from "@/utils/articleUtils";
+import { News } from "@/utils/newsUtils"; // Import News type
 import Link from "next/link";
 
 export default function AdminPage() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [newsItems, setNewsItems] = useState<News[]>([]); // News items state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [contentType, setContentType] = useState<"articles" | "news">(
+    "articles"
+  ); // Content type selector state
 
   useEffect(() => {
-    // 記事データを取得
-    const fetchArticles = async () => {
+    const fetchContent = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await fetch("/api/articles");
-        if (!response.ok) {
-          throw new Error("記事の取得に失敗しました");
+        let data;
+        if (contentType === "articles") {
+          const response = await fetch("/api/articles");
+          if (!response.ok) throw new Error("記事の取得に失敗しました");
+          data = await response.json();
+          setArticles(data);
+          setNewsItems([]); // Clear news items when articles are fetched
+        } else {
+          const response = await fetch("/api/news");
+          if (!response.ok) throw new Error("ニュースの取得に失敗しました");
+          data = await response.json();
+          setNewsItems(data);
+          setArticles([]); // Clear articles when news items are fetched
         }
-        const data = await response.json();
-        setArticles(data);
-      } catch (err) {
-        setError("記事の読み込み中にエラーが発生しました。");
+      } catch (err: any) {
+        setError(err.message || "データ読み込み中にエラーが発生しました。");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles();
-  }, []);
+    fetchContent();
+  }, [contentType]);
 
   const handleDelete = async (slug: string) => {
-    if (!confirm("この記事を削除してもよろしいですか？")) {
+    if (!confirm("このコンテンツを削除してもよろしいですか？")) {
       return;
     }
 
     try {
-      const response = await fetch(`/api/articles/${slug}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("記事の削除に失敗しました");
+      let response;
+      if (contentType === "articles") {
+        response = await fetch(`/api/articles/${slug}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error("記事の削除に失敗しました");
+        setArticles(articles.filter((article) => article.slug !== slug)); // Update articles state
+      } else {
+        response = await fetch(`/api/news/${slug}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error("ニュースの削除に失敗しました");
+        setNewsItems(newsItems.filter((news) => news.slug !== slug)); // Update news items state
       }
-
-      // 記事リストを更新
-      setArticles(articles.filter((article) => article.slug !== slug));
-    } catch (err) {
-      setError("記事の削除中にエラーが発生しました。");
+    } catch (err: any) {
+      setError(err.message || "コンテンツの削除中にエラーが発生しました。");
       console.error(err);
     }
   };
+
+  const contentList = contentType === "articles" ? articles : newsItems; // Determine which list to use based on contentType
+  const itemTypeLabel = contentType === "articles" ? "記事" : "ニュース"; // Label for content type
 
   if (loading) {
     return (
@@ -85,7 +106,8 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">記事管理</h1>
+            <h1 className="text-3xl font-bold">{itemTypeLabel}管理</h1>{" "}
+            {/* Dynamic heading */}
             <div className="flex space-x-4">
               <Link
                 href="/"
@@ -94,18 +116,40 @@ export default function AdminPage() {
                 サイトに戻る
               </Link>
               <Link
-                href="/admin/new"
+                href={`/admin/new?type=${contentType}`}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
-                新規記事作成
+                新規{itemTypeLabel}作成 {/* Dynamic new content link text */}
               </Link>
             </div>
           </div>
 
-          {articles.length === 0 ? (
+          {/* コンテンツタイプ選択 */}
+          <div className="mb-4">
+            <label
+              htmlFor="contentType"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              コンテンツタイプを選択:
+            </label>
+            <select
+              id="contentType"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-700 dark:text-white"
+              value={contentType}
+              onChange={(e) =>
+                setContentType(e.target.value as "articles" | "news")
+              }
+            >
+              <option value="articles">記事</option>
+              <option value="news">ニュース</option>
+            </select>
+          </div>
+
+          {contentList.length === 0 ? (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
               <p className="text-gray-600 dark:text-gray-400">
-                記事がありません。新しい記事を作成してください。
+                {itemTypeLabel}がありません。新しい{itemTypeLabel}
+                を作成してください。 {/* Dynamic no content message */}
               </p>
             </div>
           ) : (
@@ -129,12 +173,6 @@ export default function AdminPage() {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
-                      著者
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                    >
                       カテゴリ
                     </th>
                     <th
@@ -146,48 +184,43 @@ export default function AdminPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {articles.map((article) => (
-                    <tr key={article.id}>
+                  {contentList.map((item) => (
+                    <tr key={item.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {article.title}
+                          {item.title}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {article.slug}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {new Date(article.date).toLocaleDateString("ja-JP")}
+                          {item.slug}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {article.author}
+                          {new Date(item.date).toLocaleDateString("ja-JP")}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                          {article.category}
+                          {item.category}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <Link
-                            href={`/blog/${article.slug}`}
+                            href={`/${contentType}/${item.slug}`}
                             className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
                             target="_blank"
                           >
                             表示
                           </Link>
                           <Link
-                            href={`/admin/edit/${article.slug}`}
+                            href={`/admin/edit/${item.slug}?type=${contentType}`}
                             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           >
                             編集
                           </Link>
                           <button
-                            onClick={() => handleDelete(article.slug)}
+                            onClick={() => handleDelete(item.slug)}
                             className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                           >
                             削除

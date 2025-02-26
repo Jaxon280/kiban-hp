@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
+/**
+ * @type {import('next').NextConfig}
+ */
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  reactStrictMode: true,
+  // Disable Turbopack to force using Webpack bindings for React Server Components
+  experimental: {
+    turbo: false,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

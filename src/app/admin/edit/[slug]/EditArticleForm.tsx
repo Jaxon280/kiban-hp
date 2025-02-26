@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Article } from "@/utils/articleUtils";
@@ -33,6 +33,7 @@ export default function EditArticleForm({ article }: EditArticleFormProps) {
     setError(null);
 
     try {
+      // タグを配列に変換
       const tagsArray = formData.tags
         .split(",")
         .map((tag) => tag.trim())
@@ -56,6 +57,7 @@ export default function EditArticleForm({ article }: EditArticleFormProps) {
         throw new Error(errorData.error || "記事の更新に失敗しました");
       }
 
+      // 成功したら管理画面に戻る
       router.push("/admin");
     } catch (err) {
       if (err instanceof Error) {

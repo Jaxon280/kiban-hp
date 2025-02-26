@@ -1,0 +1,9 @@
+{
+  "id": "3",
+  "title": "Example News 3",
+  "slug": "example-news3",
+  "date": "2025-02-28T14:00:00Z",
+  "category": "politics",
+  "excerpt": "This is the third news example, focusing on political events.",
+  "content": "Content for example news item number 3, written using markdown syntax."
+}

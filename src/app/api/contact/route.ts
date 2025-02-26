@@ -3,79 +3,60 @@ import nodemailer from "nodemailer";
 
 // メール送信用のトランスポーター設定
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true",
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: process.env.SMTP_PORT === "465",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 });
 
-// フォームデータの型定義
-interface ContactForm {
-  name: string;
-  email: string;
-  company?: string;
-  subject: string;
-  message: string;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const data = (await request.json()) as ContactForm;
-
-    // バリデーション
-    if (!data.name || !data.email || !data.subject || !data.message) {
-      return NextResponse.json(
-        { error: "必須項目が入力されていません" },
-        { status: 400 }
-      );
-    }
-
-    // メール本文の作成
-    const mailBody = `
-お問い合わせがありました。
-
-■ お名前
-${data.name}
-
-■ メールアドレス
-${data.email}
-
-${data.company ? `■ 会社名\n${data.company}\n` : ""}
-■ 件名
-${data.subject}
-
-■ メッセージ
-${data.message}
-    `.trim();
+    const body = await request.json();
+    const { company, name, email, phone, message } = body;
 
     // 管理者向けメール
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "noreply@example.com",
-      to: process.env.ADMIN_EMAIL || "admin@example.com",
-      subject: `[お問い合わせ] ${data.subject}`,
-      text: mailBody,
+      from: process.env.SMTP_USER,
+      to: process.env.ADMIN_EMAIL,
+      subject: "ウェブサイトからのお問い合わせ",
+      text: `
+会社名: ${company || "未入力"}
+お名前: ${name}
+メールアドレス: ${email}
+電話番号: ${phone || "未入力"}
+
+お問い合わせ内容:
+${message}
+      `,
     });
 
-    // 自動返信メール
+    // 送信者向け自動返信メール
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "noreply@example.com",
-      to: data.email,
+      from: process.env.SMTP_USER,
+      to: email,
       subject: "お問い合わせありがとうございます",
       text: `
-${data.name} 様
+${name} 様
 
-お問い合わせありがとうございます。
+お問い合わせいただき、ありがとうございます。
 以下の内容で承りました。
-内容を確認次第、担当者よりご連絡させていただきます。
+担当者より順次ご連絡させていただきます。
 
 --------------------
-■ お問い合わせ内容
+会社名: ${company || "未入力"}
+お名前: ${name}
+メールアドレス: ${email}
+電話番号: ${phone || "未入力"}
+
+お問い合わせ内容:
+${message}
 --------------------
-${mailBody}
-      `.trim(),
+
+※このメールは自動送信されています。
+      `,
     });
 
     return NextResponse.json({ success: true });

@@ -1,0 +1,9 @@
+{
+  "id": "2",
+  "title": "Example News 2",
+  "slug": "example-news2",
+  "date": "2025-02-27T10:00:00Z",
+  "category": "business",
+  "excerpt": "Check out the excerpt for news item number two.",
+  "content": "This is the second example news article's content, written in markdown."
+}

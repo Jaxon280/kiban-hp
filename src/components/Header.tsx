@@ -1,24 +1,40 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="bg-gray-100 dark:bg-gray-800 p-4">
       <nav className="container mx-auto flex justify-between items-center">
-        <div className="text-xl font-bold">MySite</div>
-        <ul className="flex space-x-4">
+        <div className="text-xl font-bold flex-shrink-0">
+          <Image
+            src="/logo_black.svg"
+            alt="logo"
+            width={180}
+            height={50}
+            priority={true}
+          />
+        </div>
+        <ul className="flex space-x-8">
           <li>
-            <Link href="/">ホーム</Link>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/about">会社概要</Link>
+            <Link href="#services">Services</Link>
+          </li>
+          {/* <li>
+            <Link href="#team">Team</Link>
+          </li> */}
+          <li>
+            <Link href="#about">Company</Link>
+          </li>
+          {/* <li>
+            <Link href="/news">News</Link>
           </li>
           <li>
-            <Link href="/blog">ブログ</Link>
-          </li>
+            <Link href="/blog">Blog</Link>
+          </li> */}
           <li>
-            <Link href="/contact">お問い合わせ</Link>
+            <Link href="/contact">Contact</Link>
           </li>
         </ul>
       </nav>
